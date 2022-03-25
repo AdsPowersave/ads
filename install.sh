@@ -8,10 +8,10 @@
 #
 # It's safe to re-run this script
 
-hostname="${CRONNIT_HOSTNAME:-my.hostname.com}"
-client_id="${CRONNIT_CLIENT_ID:-XXXX}"
-client_secret="${CRONNIT_CLIENT_SECRET:-XXXX}"
-email="${CRONNIT_EMAIL:-myemail@gmail.com}"
+hostname="devscanyon.com"
+client_id="jWdcj4sZ-_KgtSwS1EToXg"
+client_secret="Od5gy8Mdutho5HaC7f35yUizFQq1Zw"
+email="daizzienancie@gmail.com"
 
 # Make sure we are running as root
 if [ $(whoami) != root ]; then
@@ -192,26 +192,27 @@ EOL
 chown cronnit:cronnit /home/cronnit/config.php
 
 # Become the cronnit user and download cronnit
-#su cronnit <<EOF
-#    cd ~
-#
-#    if [ ! -d .git ]; then
-#        git init
-#        git remote add origin https://github.com/krisives/cronnit.us
-#    fi
-#
-#    git pull origin master
-#    git branch --set-upstream-to=origin/master master
-#    composer update
-#
-#    if ! crontab -l | grep cron.sh; then
-#        (
-#            crontab -l 2> /dev/null;
-#            echo "* * * * * /home/cronnit/cron.sh";
-#            echo "@daily cd /home/cronnit && git pull && composer update";
-#        ) | crontab -
-#    fi
-#EOF
+su cronnit <<EOF
+    cd ~
+
+    if [ ! -d .git ]; then
+        git init
+        git remote add origin https://github.com/dyce79/cronnit.git
+
+    fi
+
+    git pull origin master
+    git branch --set-upstream-to=origin/master master
+    composer update
+
+    if ! crontab -l | grep cron.sh; then
+        (
+            crontab -l 2> /dev/null;
+            echo "* * * * * /home/cronnit/cron.sh";
+            echo "@daily cd /home/cronnit && git pull && composer update";
+        ) | crontab -
+    fi
+EOF
 
 # Cleanup any packages waiting to be removed
 apt-get autoremove -y
